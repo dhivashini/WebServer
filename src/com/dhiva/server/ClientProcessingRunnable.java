@@ -22,7 +22,7 @@ public class ClientProcessingRunnable implements Runnable {
 			while (true) {
 				//each thread getting a client socket in a synchronized manner
 				//since the synchronization is done on the method
-				Socket currentClient = ServerApp.getClientSocket();
+				Socket currentClient = ClientConnectionsRunnable.getClientSocket();
 				//if the is no client request,sleep and continue to check for client connections
 				if (currentClient == null) {
 					Thread.sleep(50);
