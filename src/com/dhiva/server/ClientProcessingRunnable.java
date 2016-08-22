@@ -5,9 +5,11 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class ClientProcessingRunnable implements Runnable {
-	//instance variable
+	// instance variable
 	private String name;
-	//setter and getter to access the private fields 
+	private boolean runnableState = false;
+
+	// setter and getter to access the private fields
 	public String getName() {
 		return name;
 	}
@@ -16,20 +18,26 @@ public class ClientProcessingRunnable implements Runnable {
 		this.name = name;
 	}
 
+	public void setRunnableState(boolean isStopped) {
+		this.runnableState = isStopped;
+	}
+
 	@Override
 	public void run() {
 		try {
-			while (true) {
-				//each thread getting a client socket in a synchronized manner
-				//since the synchronization is done on the method
+			while (true && !runnableState) {
+				// each thread getting a client socket in a synchronized manner
+				// since the synchronization is done on the method
 				Socket currentClient = ClientConnectionsRunnable.getClientSocket();
-				//if the is no client request,sleep and continue to check for client connections
+				// if the is no client request,sleep and continue to check for
+				// client connections
 				if (currentClient == null) {
 					Thread.sleep(50);
 					continue;
 				} else {
 					processClientRequest(currentClient);
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
