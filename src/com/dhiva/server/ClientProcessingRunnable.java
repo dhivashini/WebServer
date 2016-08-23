@@ -69,8 +69,7 @@ public class ClientProcessingRunnable implements Runnable {
           System.out.println(line);
         }
        
-	
-		String message = "hello from server; processed by" + this.name;
+		String message = "hello from my web server; processed by" + this.name;
 		byte[] data = message.getBytes();
 		stream.write(data);
 		currentClient.close();
