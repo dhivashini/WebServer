@@ -9,13 +9,24 @@ public class ServerApp {
 	// create a thread queue of a size
 	static Queue<ClientProcessingRunnable> threadPool = new LinkedList<>();
 	static ClientConnectionsRunnable connectionObj;
-
+	static int portNum;
+	static String rootDirectory;
+	
 	public static void main(String[] args) {
 		int numberOfThreads = 5;
-
-		if (args.length > 0) {
+		
+		if (args.length == 3) {
 			numberOfThreads = Integer.parseInt(args[0]);
+			portNum = Integer.parseInt(args[1]);
+			rootDirectory = args[2];
+		} else {
+			System.out.println("Please enter the following arguments. <# of processing threads> <port> <rootdir>");
 		}
+		
+		if(rootDirectory.endsWith("/")){
+			rootDirectory = rootDirectory.substring(0,rootDirectory.length()-1);
+		}
+		
 		// spans the client processing threads
 		spanProcessingThreads(numberOfThreads);
 		// spans a new thread to accept client connections
@@ -23,8 +34,7 @@ public class ServerApp {
 
 		while (true) {
 			Scanner reader = new Scanner(System.in);
-			System.out.println(
-					"Enter #1 to shutdown all threads #2 to add 2 client processing threads #3 shut down server");
+			System.out.println("Enter #1 to shutdown all threads #2 to add 2 client processing threads #3 shut down server");
 			int option = reader.nextInt();
 			if (option == 1) {
 				stopThreads();
@@ -58,6 +68,7 @@ public class ServerApp {
 			connectionObj = new ClientConnectionsRunnable();
 			Thread connection = new Thread(connectionObj);
 			connection.start();
+			connectionObj.getPortNumber(portNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

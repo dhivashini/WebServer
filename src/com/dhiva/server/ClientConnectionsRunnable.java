@@ -10,6 +10,7 @@ public class ClientConnectionsRunnable implements Runnable {
 	static Vector<Socket> listofClients = new Vector<>();
 	ServerSocket socketListener = null;
 	private boolean runnableState=false;
+	private int portNumber;
 
 	// synchronize on the collection of clients,
 	// so that only one thread is able to remove that particular client
@@ -36,7 +37,7 @@ public class ClientConnectionsRunnable implements Runnable {
 		int i = 0;
 		try {
 			// listen on a particular port
-			socketListener = new ServerSocket(3000);
+			socketListener = new ServerSocket(portNumber);
 
 			while (true && !runnableState) {
 
@@ -53,6 +54,10 @@ public class ClientConnectionsRunnable implements Runnable {
 			System.out.println();
 		}
 
+	}
+
+	public void getPortNumber(int portNum) {
+		this.portNumber=portNum;
 	}
 
 	

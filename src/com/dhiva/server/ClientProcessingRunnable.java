@@ -1,8 +1,12 @@
 package com.dhiva.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ClientProcessingRunnable implements Runnable {
 	// instance variable
@@ -47,8 +51,25 @@ public class ClientProcessingRunnable implements Runnable {
 
 	private void processClientRequest(Socket currentClient) throws InterruptedException, IOException {
 		System.out.println("processing on thread ");
+		ArrayList<String> lines = new ArrayList<String>();
+		
 		Thread.sleep(3000);
 		OutputStream stream = currentClient.getOutputStream();
+		
+		// Get input and output streams to talk to the client
+        BufferedReader in = new BufferedReader(new InputStreamReader(currentClient.getInputStream()));
+        PrintWriter out = new PrintWriter(currentClient.getOutputStream());
+       
+        String line;
+        while ((line = in.readLine()) != null) {
+          if (line.length() == 0)
+            break;
+          lines.add(line);
+          out.print(line + "\r\n");
+          System.out.println(line);
+        }
+       
+	
 		String message = "hello from server; processed by" + this.name;
 		byte[] data = message.getBytes();
 		stream.write(data);
