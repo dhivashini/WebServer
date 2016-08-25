@@ -45,7 +45,6 @@ public class ClientProcessingRunnable implements Runnable {
 				} else {
 					processClientRequest(currentClient);
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,7 +57,7 @@ public class ClientProcessingRunnable implements Runnable {
 		OutputStream stream = currentClient.getOutputStream();
 		Thread.sleep(3000);
 
-		ArrayList<String> lines = parseClientRequest(currentClient);
+		StringBuffer lines = parseClientRequest(currentClient);
 
 		sendClientFile(currentClient, lines);
 
@@ -68,45 +67,55 @@ public class ClientProcessingRunnable implements Runnable {
 		currentClient.close();
 	}
 
-	private void sendClientFile(Socket currentClient, ArrayList<String> lines) {
-		String[] splited = lines.get(0).split("\\s+");
+	private void sendClientFile(Socket currentClient, StringBuffer lines) {
+		String request = lines.toString();
+		String[] splited = request.split("\\s+");
 		String requestType = splited[0];
 		String requestFile = splited[1];
-		final String FILE_TO_SEND = rootDirectory + requestFile;
-		File myFile = new File(FILE_TO_SEND);
-		byte[] mybytearray = new byte[(int) myFile.length()];
-		try {
-			OutputStream stream = currentClient.getOutputStream();
-			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
-			bis.read(mybytearray, 0, mybytearray.length);
 
-			System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
-			stream.write(mybytearray, 0, mybytearray.length);
-			stream.flush();
-			System.out.println("Done.");
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (requestType.equalsIgnoreCase("HEAD")) {
+
+		} else if (requestType.equalsIgnoreCase("GET")) {
+
+			final String FILE_TO_SEND = rootDirectory + requestFile;
+			File myFile = new File(FILE_TO_SEND);
+
+			byte[] mybytearray = new byte[(int) myFile.length()];
+			try {
+				OutputStream stream = currentClient.getOutputStream();
+				BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
+				bis.read(mybytearray, 0, mybytearray.length);
+
+				System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
+				stream.write(mybytearray, 0, mybytearray.length);
+				stream.flush();
+				bis.close();
+				System.out.println("Done.");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
 
-	private ArrayList<String> parseClientRequest(Socket currentClient) {
-		ArrayList<String> lines = new ArrayList<String>();
+	private StringBuffer parseClientRequest(Socket currentClient) {
+		// ArrayList<String> lines = new ArrayList<String>();
+		StringBuffer str = new StringBuffer();
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(currentClient.getInputStream()));
-			// PrintWriter out = new PrintWriter(stream);
 			String line;
 			while ((line = in.readLine()) != null) {
 				if (line.length() == 0)
 					break;
-				lines.add(line);
-				// out.print(line + "\r\n");
+				str.append(line);
+				str.append(" ");
 				System.out.println(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return lines;
+		// return lines;
+		return str;
 	}
 
 	public void getRootDirectory(String rootDirectory) {
