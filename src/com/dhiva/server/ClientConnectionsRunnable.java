@@ -27,7 +27,6 @@ public class ClientConnectionsRunnable implements Runnable {
 		try {
 			socketListener.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 		//	e.printStackTrace();
 		}
 	}
@@ -57,7 +56,7 @@ public class ClientConnectionsRunnable implements Runnable {
 	}
 
 	public void getPortNumber(int portNum) {
-		this.portNumber=portNum;
+		this.portNumber = portNum;
 	}
 
 	

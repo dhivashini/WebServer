@@ -34,7 +34,7 @@ public class ServerApp {
 
 		while (true) {
 			Scanner reader = new Scanner(System.in);
-			System.out.println("Enter #1 to shutdown all threads #2 to add 2 client processing threads #3 shut down server");
+			System.out.println("Enter #1 to shutdown all threads #2 to restart client processing threads #3 shut down server");
 			int option = reader.nextInt();
 			if (option == 1) {
 				stopThreads();

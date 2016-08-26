@@ -7,15 +7,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClientProcessingRunnable implements Runnable {
 	// instance variable
 	private String name;
 	private boolean runnableState = false;
 	private String rootDirectory;
+	static boolean append = true;
+	private String requestType;
+	private String requestFile;
 
 	// setter and getter to access the private fields
 	public String getName() {
@@ -28,6 +31,20 @@ public class ClientProcessingRunnable implements Runnable {
 
 	public void setRunnableState(boolean isStopped) {
 		this.runnableState = isStopped;
+	}
+
+	public void getRootDirectory(String rootDirectory) {
+		this.rootDirectory = rootDirectory;
+
+	}
+
+	public void setrequestType(String requestType) {
+		this.requestType = requestType;
+	}
+
+	public void setrequestFile(String requestFile) {
+		this.requestFile = requestFile;
+
 	}
 
 	@Override
@@ -72,7 +89,6 @@ public class ClientProcessingRunnable implements Runnable {
 		String[] splited = request.split("\\s+");
 		String requestType = splited[0];
 		String requestFile = splited[1];
-
 		if (requestType.equalsIgnoreCase("HEAD")) {
 
 		} else if (requestType.equalsIgnoreCase("GET")) {
@@ -80,26 +96,37 @@ public class ClientProcessingRunnable implements Runnable {
 			final String FILE_TO_SEND = rootDirectory + requestFile;
 			File myFile = new File(FILE_TO_SEND);
 
-			byte[] mybytearray = new byte[(int) myFile.length()];
-			try {
-				OutputStream stream = currentClient.getOutputStream();
-				BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
-				bis.read(mybytearray, 0, mybytearray.length);
+			if (myFile.exists() && myFile.isFile()) {
+				byte[] mybytearray = new byte[(int) myFile.length()];
+				try {
+					OutputStream stream = currentClient.getOutputStream();
+					BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
+					bis.read(mybytearray, 0, mybytearray.length);
 
-				System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
-				stream.write(mybytearray, 0, mybytearray.length);
-				stream.flush();
-				bis.close();
-				System.out.println("Done.");
-			} catch (IOException e) {
-				e.printStackTrace();
+					System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
+					stream.write(mybytearray, 0, mybytearray.length);
+					stream.flush();
+					bis.close();
+					System.out.println("Done.");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (myFile.exists() && myFile.isDirectory()) {
+				File[] listOfFiles = myFile.listFiles();
+				List<String> results = new ArrayList<String>();
+				for (File file : listOfFiles) {
+					if (file.isFile()) {
+						results.add(file.getName());
+					}
+				}
+				System.out.println(results);
 			}
 		}
 
 	}
 
 	private StringBuffer parseClientRequest(Socket currentClient) {
-		// ArrayList<String> lines = new ArrayList<String>();
 		StringBuffer str = new StringBuffer();
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(currentClient.getInputStream()));
@@ -114,12 +141,7 @@ public class ClientProcessingRunnable implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// return lines;
 		return str;
 	}
 
-	public void getRootDirectory(String rootDirectory) {
-		this.rootDirectory = rootDirectory;
-
-	}
 }
