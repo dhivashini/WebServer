@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ClientProcessingRunnable implements Runnable {
 	// instance variable
@@ -95,7 +96,17 @@ public class ClientProcessingRunnable implements Runnable {
 
 			final String FILE_TO_SEND = rootDirectory + requestFile;
 			File myFile = new File(FILE_TO_SEND);
-
+			if (!myFile.exists()) {
+				String msg = "Sorry file not found";
+				byte[] data = msg.getBytes();
+				try {
+					OutputStream stream = currentClient.getOutputStream();
+					stream.write(data);
+					stream.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			if (myFile.exists() && myFile.isFile()) {
 				byte[] mybytearray = new byte[(int) myFile.length()];
 				try {
@@ -113,17 +124,32 @@ public class ClientProcessingRunnable implements Runnable {
 				}
 			}
 			if (myFile.exists() && myFile.isDirectory()) {
-				File[] listOfFiles = myFile.listFiles();
-				List<String> results = new ArrayList<String>();
-				for (File file : listOfFiles) {
-					if (file.isFile()) {
-						results.add(file.getName());
+				OutputStream stream;
+				try {
+					stream = currentClient.getOutputStream();
+					File[] listOfFiles = myFile.listFiles();
+					List<String> results = new ArrayList<String>();
+					for (File file : listOfFiles) {
+						if (file.isFile()) {
+							results.add(file.getName());
+						}
+
 					}
+					for (String fileName : results) {
+						String startTag = "<!DOCTYPE html> <html> <body><a href=\"";
+						String endTag = "</a></body> </html>";
+						String displayName = "\">"+fileName;
+						String link = startTag +myFile.getName()+"/"+ fileName + displayName + endTag;
+						System.out.println(link);
+						byte[] data = link.getBytes();
+						stream.write(data);
+						stream.flush();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				System.out.println(results);
 			}
 		}
-
 	}
 
 	private StringBuffer parseClientRequest(Socket currentClient) {
