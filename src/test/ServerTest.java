@@ -3,7 +3,7 @@ package test;
 import static org.junit.Assert.*;
 import java.io.File;
 import org.junit.Test;
-import com.dhiva.server.HttpParse;
+import com.dhiva.server.HttpRequest;
 
 public class ServerTest  {
 
@@ -19,7 +19,7 @@ public class ServerTest  {
 		           .append("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\n ")
 		           .append("Accept-Encoding: gzip, deflate, sdch\n")
 		           .append(")Accept-Language: en-US,en;q=0.8\n");
-		HttpParse myparser = new HttpParse(request);
+		HttpRequest myparser = new HttpRequest(request);
 		myparser.parse();
 	}
 

@@ -73,16 +73,12 @@ public class ClientProcessingRunnable implements Runnable {
 
 	private void processClientRequest(Socket currentClient) throws InterruptedException, IOException {
 		System.out.println("processing on thread ");
-		OutputStream stream = currentClient.getOutputStream();
-		Thread.sleep(3000);
-
-		StringBuffer lines = parseClientRequest(currentClient);
+		
+		HttpRequest requestObj = new HttpRequest(currentClient);
+		requestObj.parse();
 
 		sendClientFile(currentClient, lines);
 
-		String message = "hello from my web server; processed by" + this.name;
-		byte[] data = message.getBytes();
-		stream.write(data);
 		currentClient.close();
 	}
 
@@ -157,24 +153,6 @@ public class ClientProcessingRunnable implements Runnable {
 				}
 			}
 		}
-	}
-
-	private StringBuffer parseClientRequest(Socket currentClient) {
-		StringBuffer str = new StringBuffer();
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(currentClient.getInputStream()));
-			String line;
-			while ((line = in.readLine()) != null) {
-				if (line.length() == 0)
-					break;
-				str.append(line);
-				str.append(" ");
-				System.out.println(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return str;
 	}
 
 }
