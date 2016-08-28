@@ -14,15 +14,12 @@ public class HttpRequest {
 	};
 
 	private HttpMethod httpMethod;
-	private String resourceURI;
-	private String queryString;
-	private String pathInfo;
-	private String servletPath;
-	private String servletName;
-	private String httpVersion;
+	private String requestType;
+	private String requestFile;
+	private String requestVersion;
+
 	private Socket currentClient;
-	private String requestBody;
-	private String urlPattern;
+	
 	private StringBuffer clientRequest;
 
 	public HttpRequest(Socket currentClient) {
@@ -46,9 +43,9 @@ public class HttpRequest {
 		}
 		String request = clientRequest.toString();
 		String[] splited = request.split("\\s+");
-		String requestType = splited[0];
-		String requestFile = splited[1];
-		String requestVersion = splited[2];
+		requestType = splited[0];
+		requestFile = splited[1];
+		requestVersion = splited[2];
 		ClientProcessingRunnable obj = new ClientProcessingRunnable();
 		obj.setrequestType(requestType);
 		obj.setrequestFile(requestFile);
