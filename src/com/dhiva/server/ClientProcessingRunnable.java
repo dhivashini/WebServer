@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,8 +114,10 @@ public class ClientProcessingRunnable implements Runnable {
 					OutputStream stream = currentClient.getOutputStream();
 					BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
 					bis.read(mybytearray, 0, mybytearray.length);
-
 					System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
+					String s = "HTTP/1.1 200 \r\nContent-Type: application/pdf\r\nConnection: close\r\n\r\n";
+					byte[] data = s.getBytes();
+					stream.write(data);
 					stream.write(mybytearray, 0, mybytearray.length);
 					stream.flush();
 					bis.close();
@@ -122,6 +125,7 @@ public class ClientProcessingRunnable implements Runnable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+
 			}
 			if (myFile.exists() && myFile.isDirectory()) {
 				OutputStream stream;
@@ -138,9 +142,12 @@ public class ClientProcessingRunnable implements Runnable {
 					for (String fileName : results) {
 						String startTag = "<!DOCTYPE html> <html> <body><a href=\"";
 						String endTag = "</a></body> </html>";
-						String displayName = "\">"+fileName;
-						String link = startTag +myFile.getName()+"/"+ fileName + displayName + endTag;
+						String displayName = "\">" + fileName;
+						String link = startTag + myFile.getName() + "/" + fileName + displayName + endTag;
 						System.out.println(link);
+						String s = "HTTP/1.1 200 \r\nContent-Type: text/html\r\nConnection: close\r\n\r\n";
+						byte[] data1 = s.getBytes();
+						stream.write(data1);
 						byte[] data = link.getBytes();
 						stream.write(data);
 						stream.flush();
