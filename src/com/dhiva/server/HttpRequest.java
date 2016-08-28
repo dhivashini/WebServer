@@ -14,12 +14,9 @@ public class HttpRequest {
 	};
 
 	private HttpMethod httpMethod;
-	private String requestType;
 	private String requestFile;
 	private String requestVersion;
-
 	private Socket currentClient;
-	
 	private StringBuffer clientRequest;
 
 	public HttpRequest(Socket currentClient) {
@@ -43,12 +40,18 @@ public class HttpRequest {
 		}
 		String request = clientRequest.toString();
 		String[] splited = request.split("\\s+");
-		requestType = splited[0];
-		requestFile = splited[1];
-		requestVersion = splited[2];
-		ClientProcessingRunnable obj = new ClientProcessingRunnable();
-		obj.setrequestType(requestType);
-		obj.setrequestFile(requestFile);
+		this.setHttpMethod(splited[0]);
+		this.setRequestFile(splited[1]);
+		this.setRequestVersion(splited[2]);
+
+	}
+
+	private void setRequestVersion(String requestVersion) {
+		this.requestVersion = requestVersion;
+	}
+
+	private void setRequestFile(String requestFile) {
+		this.requestFile = requestFile;
 	}
 
 	public void setHttpMethod(String requestType) {
@@ -72,4 +75,17 @@ public class HttpRequest {
 		}
 	}
 	
+	public String getHttpMethod() {
+		return httpMethod.toString();
+	}
+
+	public String getRequestFile() {
+		return requestFile;
+	}
+
+	public String getRequestVersion() {
+		return requestVersion;
+	}
+
+
 }

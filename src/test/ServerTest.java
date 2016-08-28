@@ -19,8 +19,8 @@ public class ServerTest  {
 		           .append("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\n ")
 		           .append("Accept-Encoding: gzip, deflate, sdch\n")
 		           .append(")Accept-Language: en-US,en;q=0.8\n");
-		HttpRequest myparser = new HttpRequest(request);
-		myparser.parse();
+		//HttpRequest myparser = new HttpRequest(request);
+		//myparser.parse();
 	}
 
 }
