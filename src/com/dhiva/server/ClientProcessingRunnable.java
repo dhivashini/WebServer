@@ -73,16 +73,17 @@ public class ClientProcessingRunnable implements Runnable {
 
 	private void processClientRequest(Socket currentClient) throws InterruptedException, IOException {
 		System.out.println("processing on thread ");
-		HttpRequest requestObj = new HttpRequest(currentClient);
-		requestObj.parse();
+		HttpRequestParser parseObj = new HttpRequestParser(currentClient);
+		HttpRequest requestObj = new HttpRequest();
+		parseObj.parse();
 		sendClientFile(currentClient, requestObj);
 		currentClient.close();
 	}
 
 	private void sendClientFile(Socket currentClient, HttpRequest requestObj) {
 		String requestType = requestObj.getHttpMethod();
-		String requestFile = requestObj.getRequestFile();
-		String requestVersion = requestObj.getRequestVersion();
+		String requestFile = requestObj.getResourceURI();
+		String requestVersion = requestObj.getHttpVersion();
 		if (requestType.equalsIgnoreCase("HEAD")) {
 
 		} else if (requestType.equalsIgnoreCase("GET")) {

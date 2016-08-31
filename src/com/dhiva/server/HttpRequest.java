@@ -14,44 +14,15 @@ public class HttpRequest {
 	};
 
 	private HttpMethod httpMethod;
-	private String requestFile;
-	private String requestVersion;
-	private Socket currentClient;
-	private StringBuffer clientRequest;
+	private String resourceURI;
+	private String httpVersion;
 
-	public HttpRequest(Socket currentClient) {
-		this.currentClient = currentClient;
+	public void setHttpVersion(String requestVersion) {
+		this.httpVersion = requestVersion;
 	}
 
-	public void parse() {
-		try {
-			clientRequest = new StringBuffer();
-			BufferedReader in = new BufferedReader(new InputStreamReader(currentClient.getInputStream()));
-			String line;
-			while ((line = in.readLine()) != null) {
-				if (line.length() == 0)
-					break;
-				clientRequest.append(line);
-				clientRequest.append(" ");
-				System.out.println(line);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		String request = clientRequest.toString();
-		String[] splited = request.split("\\s+");
-		this.setHttpMethod(splited[0]);
-		this.setRequestFile(splited[1]);
-		this.setRequestVersion(splited[2]);
-
-	}
-
-	private void setRequestVersion(String requestVersion) {
-		this.requestVersion = requestVersion;
-	}
-
-	private void setRequestFile(String requestFile) {
-		this.requestFile = requestFile;
+	public void setResourceURI(String requestFile) {
+		this.resourceURI = requestFile;
 	}
 
 	public void setHttpMethod(String requestType) {
@@ -79,12 +50,12 @@ public class HttpRequest {
 		return httpMethod.toString();
 	}
 
-	public String getRequestFile() {
-		return requestFile;
+	public String getResourceURI() {
+		return resourceURI;
 	}
 
-	public String getRequestVersion() {
-		return requestVersion;
+	public String getHttpVersion() {
+		return httpVersion;
 	}
 
 
