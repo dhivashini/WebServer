@@ -12,7 +12,7 @@ public class HttpRequestParser {
 		this.currentClient = currentClient;
 	}
 
-	public void parse() {
+	public HttpRequest parse() {
 		try {
 			clientRequest = new StringBuffer();
 			BufferedReader in = new BufferedReader(new InputStreamReader(currentClient.getInputStream()));
@@ -33,6 +33,7 @@ public class HttpRequestParser {
 		requestObj.setHttpMethod(splited[0]);
 		requestObj.setResourceURI(splited[1]);
 		requestObj.setHttpVersion(splited[2]);
+		return requestObj;
 
 	}
 
