@@ -19,8 +19,6 @@ public class ClientProcessingRunnable implements Runnable {
 	private boolean runnableState = false;
 	private String rootDirectory;
 	static boolean append = true;
-	private String requestType;
-	private String requestFile;
 
 	// setter and getter to access the private fields
 	public String getName() {
@@ -37,15 +35,6 @@ public class ClientProcessingRunnable implements Runnable {
 
 	public void getRootDirectory(String rootDirectory) {
 		this.rootDirectory = rootDirectory;
-
-	}
-
-	public void setrequestType(String requestType) {
-		this.requestType = requestType;
-	}
-
-	public void setrequestFile(String requestFile) {
-		this.requestFile = requestFile;
 
 	}
 
