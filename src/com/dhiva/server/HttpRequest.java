@@ -1,14 +1,16 @@
 package com.dhiva.server;
 
 public class HttpRequest {
-
-	enum HttpMethod {
-		GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT, BAD
-	};
-
 	private HttpMethod httpMethod;
 	private String resourceURI;
 	private String httpVersion;
+
+	public enum HttpMethod {
+		GET("GET"),
+		HEAD, POST, PUT, DELETE, TRACE, CONNECT, BAD
+	};
+
+
 
 	public void setHttpVersion(String requestVersion) {
 		this.httpVersion = requestVersion;

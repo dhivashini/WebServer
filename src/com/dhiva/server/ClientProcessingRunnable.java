@@ -17,7 +17,6 @@ public class ClientProcessingRunnable implements Runnable {
 	// instance variable
 	private String name;
 	private boolean runnableState = false;
-	private String rootDirectory;
 	static boolean append = true;
 
 	// setter and getter to access the private fields
@@ -31,11 +30,6 @@ public class ClientProcessingRunnable implements Runnable {
 
 	public void setRunnableState(boolean isStopped) {
 		this.runnableState = isStopped;
-	}
-
-	public void getRootDirectory(String rootDirectory) {
-		this.rootDirectory = rootDirectory;
-
 	}
 
 	@Override
@@ -64,48 +58,21 @@ public class ClientProcessingRunnable implements Runnable {
 		System.out.println("processing on thread ");
 		HttpRequestParser parseObj = new HttpRequestParser(currentClient);
 		HttpRequest requestObj = parseObj.parse();
+		HttpResponse responseObj = new HttpResponse(requestObj);
 		sendClientFile(currentClient, requestObj);
 		currentClient.close();
 	}
 
 	private void sendClientFile(Socket currentClient, HttpRequest requestObj) {
 		String requestType = requestObj.getHttpMethod();
-		String requestFile = requestObj.getResourceURI();
+		
 		String requestVersion = requestObj.getHttpVersion();
 		if (requestType.equalsIgnoreCase("HEAD")) {
 
 		} else if (requestType.equalsIgnoreCase("GET")) {
 
-			final String FILE_TO_SEND = rootDirectory + requestFile;
-			File myFile = new File(FILE_TO_SEND);
-			if (!myFile.exists()) {
-				String msg = "Sorry file not found";
-				byte[] data = msg.getBytes();
-				try {
-					OutputStream stream = currentClient.getOutputStream();
-					stream.write(data);
-					stream.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (myFile.exists() && myFile.isFile()) {
-				byte[] mybytearray = new byte[(int) myFile.length()];
-				try {
-					OutputStream stream = currentClient.getOutputStream();
-					BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
-					bis.read(mybytearray, 0, mybytearray.length);
-					System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
-					String s = "HTTP/1.1 200 \r\nContent-Type: application/pdf\r\nConnection: close\r\n\r\n";
-					byte[] data = s.getBytes();
-					stream.write(data);
-					stream.write(mybytearray, 0, mybytearray.length);
-					stream.flush();
-					bis.close();
-					System.out.println("Done.");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			
+			
 
 			}
 			if (myFile.exists() && myFile.isDirectory()) {
