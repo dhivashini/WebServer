@@ -17,7 +17,7 @@ public class HttpRequest {
 			return httpMethod.toString();
 		}
 
-		public static HttpMethod findHttpMethod(String text) {
+		public HttpMethod setHttpMethod(String text) {
 			if (text != null) {
 				for (HttpMethod b : HttpMethod.values()) {
 					if (text.equalsIgnoreCase(b.httpMethod)) {

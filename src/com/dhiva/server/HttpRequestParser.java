@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import com.dhiva.server.HttpRequest.HttpMethod;
+
 public class HttpRequestParser {
 	private Socket currentClient;
 	private StringBuffer clientRequest;
@@ -30,7 +32,8 @@ public class HttpRequestParser {
 		String request = clientRequest.toString();
 		String[] splited = request.split("\\s+");
 		HttpRequest requestObj = new HttpRequest();
-		requestObj.setHttpMethod(splited[0]);
+		HttpMethod methodObj = null;
+		methodObj.setHttpMethod(splited[0]);
 		requestObj.setResourceURI(splited[1]);
 		requestObj.setHttpVersion(splited[2]);
 		return requestObj;
