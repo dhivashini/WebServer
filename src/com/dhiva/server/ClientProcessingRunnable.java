@@ -13,9 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.dhiva.server.HttpRequest.HttpMethod;
+
 public class ClientProcessingRunnable implements Runnable {
 	// instance variable
 	private String name;
+	private String rootDirectory;
 	private boolean runnableState = false;
 	static boolean append = true;
 
@@ -56,8 +59,11 @@ public class ClientProcessingRunnable implements Runnable {
 
 	private void processClientRequest(Socket currentClient) throws InterruptedException, IOException {
 		System.out.println("processing on thread ");
-		HttpRequestParser parseObj = new HttpRequestParser(currentClient);
+		ReadSocketForParsing socketObj = new ReadSocketForParsing(currentClient);
+		StringBuffer clientRequest = socketObj.readrequest();
+		HttpRequestParser parseObj = new HttpRequestParser(clientRequest);
 		HttpRequest requestObj = parseObj.parse();
+		HttpMethod methodObj = parseObj.parseMethod();
 		HttpResponse responseObj = new HttpResponse(requestObj);
 		sendClientFile(currentClient, requestObj);
 		currentClient.close();
@@ -65,45 +71,44 @@ public class ClientProcessingRunnable implements Runnable {
 
 	private void sendClientFile(Socket currentClient, HttpRequest requestObj) {
 		String requestType = requestObj.getHttpMethod();
-		
+
 		String requestVersion = requestObj.getHttpVersion();
 		if (requestType.equalsIgnoreCase("HEAD")) {
 
 		} else if (requestType.equalsIgnoreCase("GET")) {
 
-			
-			
-
-			}
-			if (myFile.exists() && myFile.isDirectory()) {
-				OutputStream stream;
-				try {
-					stream = currentClient.getOutputStream();
-					File[] listOfFiles = myFile.listFiles();
-					List<String> results = new ArrayList<String>();
-					for (File file : listOfFiles) {
-						if (file.isFile()) {
-							results.add(file.getName());
-						}
+		}
+		if (myFile.exists() && myFile.isDirectory()) {
+			OutputStream stream;
+			try {
+				stream = currentClient.getOutputStream();
+				File[] listOfFiles = myFile.listFiles();
+				List<String> results = new ArrayList<String>();
+				for (File file : listOfFiles) {
+					if (file.isFile()) {
+						results.add(file.getName());
 					}
-					for (String fileName : results) {
-						String startTag = "<!DOCTYPE html> <html> <body><a href=\"";
-						String endTag = "</a></body> </html>";
-						String displayName = "\">" + fileName;
-						String link = startTag + myFile.getName() + "/" + fileName + displayName + endTag;
-						System.out.println(link);
-						String s = "HTTP/1.1 200 \r\nContent-Type: text/html\r\nConnection: close\r\n\r\n";
-						byte[] data1 = s.getBytes();
-						stream.write(data1);
-						byte[] data = link.getBytes();
-						stream.write(data);
-						stream.flush();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+				for (String fileName : results) {
+					String startTag = "<!DOCTYPE html> <html> <body><a href=\"";
+					String endTag = "</a></body> </html>";
+					String displayName = "\">" + fileName;
+					String link = startTag + myFile.getName() + "/" + fileName + displayName + endTag;
+					System.out.println(link);
+					String s = "HTTP/1.1 200 \r\nContent-Type: text/html\r\nConnection: close\r\n\r\n";
+					byte[] data1 = s.getBytes();
+					stream.write(data1);
+					byte[] data = link.getBytes();
+					stream.write(data);
+					stream.flush();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
 
+	public void getRootDirectory(String rootDirectory) {
+		this.rootDirectory = rootDirectory;
+	}
 }
