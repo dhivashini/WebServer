@@ -4,6 +4,7 @@ import com.dhiva.server.HttpRequest.HttpMethod;
 
 public class HttpRequestParser {
 	private StringBuffer clientRequest;
+	HttpMethod methodObj ;
 
 	public HttpRequestParser(StringBuffer clientRequest) {
 		this.clientRequest = clientRequest;
@@ -20,8 +21,7 @@ public class HttpRequestParser {
 	public HttpMethod parseMethod(){
 		String request = clientRequest.toString();
 		String[] splited = request.split("\\s+");
-		HttpMethod methodObj = null;
-		methodObj.setHttpMethod(splited[0]);
+		methodObj.setHttpMethod("GET");
 		return methodObj;
 	}
 

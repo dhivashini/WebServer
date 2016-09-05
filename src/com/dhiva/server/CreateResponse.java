@@ -5,8 +5,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.dhiva.server.HttpRequest.HttpMethod;
 
@@ -35,7 +38,9 @@ public class CreateResponse {
 			String htmlBody = "<html><body>" + statusCode + "</body></html>";
 			responseObj.setStatusCode(statusCode);
 			responseObj.setResponseBody(htmlBody);
-			// setHeaderFieldsAndCreateHeader(statusCode, htmlBody);
+			responseObj.setContentType("text/html");
+			getGMTDateTime();
+			responseObj.setContentLength(String.valueOf(htmlBody.length()));
 			return;
 		}
 
@@ -45,7 +50,9 @@ public class CreateResponse {
 			String htmlBody = "<html><body>" + statusCode + "<br>Syntax error in the request line" + "</body></html>";
 			responseObj.setStatusCode(statusCode);
 			responseObj.setResponseBody(htmlBody);
-			// setHeaderFieldsAndCreateHeader(statusCode, htmlBody);
+			responseObj.setContentType("text/html");
+			getGMTDateTime();
+			responseObj.setContentLength(String.valueOf(htmlBody.length()));
 			return;
 		}
 
@@ -55,7 +62,9 @@ public class CreateResponse {
 			String htmlBody = "<html><body>" + statusCode + "</body></html>";
 			responseObj.setStatusCode(statusCode);
 			responseObj.setResponseBody(htmlBody);
-			// setHeaderFieldsAndCreateHeader(statusCode, htmlBody);
+			responseObj.setContentType("text/html");
+			getGMTDateTime();
+			responseObj.setContentLength(String.valueOf(htmlBody.length()));
 			return;
 		}
 
@@ -65,7 +74,9 @@ public class CreateResponse {
 			String htmlBody = "<html><body>" + statusCode + "</body></html>";
 			responseObj.setStatusCode(statusCode);
 			responseObj.setResponseBody(htmlBody);
-			// setHeaderFieldsAndCreateHeader(statusCode, htmlBody);
+			responseObj.setContentType("text/html");
+			getGMTDateTime();
+			responseObj.setContentLength(String.valueOf(htmlBody.length()));
 			return;
 		}
 
@@ -74,7 +85,9 @@ public class CreateResponse {
 			String htmlBody = "<html><body>" + statusCode + "<br>Syntax error in the request line" + "</body></html>";
 			responseObj.setStatusCode(statusCode);
 			responseObj.setResponseBody(htmlBody);
-			// setHeaderFieldsAndCreateHeader(statusCode, htmlBody);
+			responseObj.setContentType("text/html");
+			getGMTDateTime();
+			responseObj.setContentLength(String.valueOf(htmlBody.length()));
 			return;
 		}
 
@@ -87,6 +100,9 @@ public class CreateResponse {
 					String htmlBody = "<html><body>" + statusCode + "</body></html>";
 					responseObj.setStatusCode(statusCode);
 					responseObj.setResponseBody(htmlBody);
+					responseObj.setContentType("text/html");
+					getGMTDateTime();
+					responseObj.setContentLength(String.valueOf(htmlBody.length()));
 				} else if (myFile.exists() && myFile.isFile()) {
 					byte[] mybytearray = new byte[(int) myFile.length()];
 					String statusCode = "200 OK";
@@ -95,10 +111,10 @@ public class CreateResponse {
 					bis.close();
 					responseObj.setStatusCode(statusCode);
 					setFileType();
+					getGMTDateTime();
 					responseObj.setContentLength(String.valueOf(mybytearray.length));
 					responseObj.setResponseBody(mybytearray.toString());
 				} else if (myFile.exists() && myFile.isDirectory()) {
-					OutputStream stream;
 					File[] listOfFiles = myFile.listFiles();
 					List<String> results = new ArrayList<String>();
 					for (File file : listOfFiles) {
@@ -116,6 +132,7 @@ public class CreateResponse {
 						responseObj.setContentLength(String.valueOf(link.length()));
 						responseObj.setResponseBody(link);
 						responseObj.setContentType("text/html");
+						getGMTDateTime();
 					}
 				}
 
@@ -131,16 +148,28 @@ public class CreateResponse {
 				String statusCode = "404 Not Found";
 				String htmlBody = "<html><body>" + statusCode + "</body></html>";
 				responseObj.setStatusCode(statusCode);
+				responseObj.setContentType("text/html");
+				getGMTDateTime();
+				responseObj.setContentLength(String.valueOf(htmlBody.length()));
 				responseObj.setResponseBody(htmlBody);
 			} else if (myFile.exists()) {
 				String statusCode = "204 No Content";
 				String htmlBody = "<html><body>" + statusCode + "</body></html>";
 				responseObj.setStatusCode(statusCode);
-				responseObj.setContentType("text/html");
 				responseObj.setResponseBody(htmlBody);
+				responseObj.setContentType("text/html");
+				getGMTDateTime();
 				responseObj.setContentLength(String.valueOf(htmlBody.length()));
 			}
 		}
+	}
+
+	public void getGMTDateTime() {
+		final Date currentTime = new Date();
+		final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+		// Give it to me in GMT time.
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		responseObj.setDate(sdf.format(currentTime));
 	}
 
 	private void setFileType() {
