@@ -54,7 +54,7 @@ public class ServerApp {
 		while (numberOfThreads >= 0) {
 			ClientProcessingRunnable clientObj = new ClientProcessingRunnable();
 			clientObj.setName("processor" + numberOfThreads);
-			clientObj.getRootDirectory(rootDirectory);
+			clientObj.setRootDirectory(rootDirectory);
 			Thread thread = new Thread(clientObj);
 			// assign a runnable class to a thread
 			// this runnable class performs the processing needed by the client
