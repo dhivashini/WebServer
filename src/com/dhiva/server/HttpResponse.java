@@ -7,6 +7,7 @@ public class HttpResponse {
 	private String contentLength;
 	private String contentType;
 	private String httpVersion;
+	private String date;
 
 	public void setHttpVersion(String httpVersion) {
 		this.httpVersion = httpVersion;
@@ -23,9 +24,16 @@ public class HttpResponse {
 	public String getStatusCode() {
 		return statusCode;
 	}
+	public void setDate(String date) {
+		this.date = "Date: "+date;
+	}
+
+	public String getDate() {
+		return date;
+	}
 
 	public void setContentType(String contentType) {
-		this.contentType = contentType;
+		this.contentType = "Content-Type: "+contentType;
 	}
 
 	public String getContentType() {
@@ -33,7 +41,7 @@ public class HttpResponse {
 	}
 
 	public void setContentLength(String contentLength) {
-		this.contentLength = contentLength;
+		this.contentLength = "Content-Length: "+contentLength;
 	}
 
 	public String getContentLength() {
@@ -41,7 +49,7 @@ public class HttpResponse {
 	}
 
 	public String getResponseHeader() {
-		responseHeader = httpVersion + statusCode + contentType + contentLength;
+		responseHeader = httpVersion +" "+ statusCode+"\r\n" + date + "\r\n"+contentType +"\r\n"+ contentLength+"\r\n\r\n";
 		return responseHeader;
 	}
 

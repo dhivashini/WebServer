@@ -65,7 +65,6 @@ public class ClientProcessingRunnable implements Runnable {
 		HttpMethod methodObj = parseObj.parseMethod();
 		CreateResponse createResponseObj = new CreateResponse(requestObj, methodObj);
 		createResponseObj.createResponseBody();
-		createResponseObj.createResponseHeader();
 		HttpResponse responseObj = new HttpResponse();
 		sendClientFile(currentClient, responseObj);
 		currentClient.close();
