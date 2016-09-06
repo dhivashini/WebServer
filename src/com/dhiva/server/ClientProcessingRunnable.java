@@ -62,10 +62,11 @@ public class ClientProcessingRunnable implements Runnable {
 		StringBuffer clientRequest = socketObj.readrequest();
 		HttpRequestParser parseObj = new HttpRequestParser(clientRequest);
 		HttpRequest requestObj = parseObj.parse();
-		HttpMethod methodObj = parseObj.parseMethod();
-		CreateResponse createResponseObj = new CreateResponse(requestObj, methodObj);
-		createResponseObj.createResponseBody();
-		HttpResponse responseObj = new HttpResponse();
+		//HttpMethod methodObj = parseObj.parseMethod();
+		//CreateResponse createResponseObj = new CreateResponse(requestObj, methodObj);
+		CreateResponse createResponseObj = new CreateResponse(requestObj);
+		createResponseObj.setRootDirectory(rootDirectory);
+		HttpResponse responseObj = createResponseObj.createResponseBody();
 		sendClientFile(currentClient, responseObj);
 		currentClient.close();
 	}

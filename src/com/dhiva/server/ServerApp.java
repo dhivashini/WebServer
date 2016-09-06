@@ -26,7 +26,6 @@ public class ServerApp {
 		if(rootDirectory.endsWith("/")){
 			rootDirectory = rootDirectory.substring(0,rootDirectory.length()-1);
 		}
-		
 		// spans the client processing threads
 		spanProcessingThreads(numberOfThreads);
 		// spans a new thread to accept client connections

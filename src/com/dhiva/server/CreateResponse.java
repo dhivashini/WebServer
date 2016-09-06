@@ -3,6 +3,7 @@ package com.dhiva.server;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -15,23 +16,34 @@ import com.dhiva.server.HttpRequest.HttpMethod;
 
 public class CreateResponse {
 	private HttpRequest requestObj;
-	private HttpMethod methodObj;
+	//private HttpMethod methodObj;
 	private String rootDirectory;
 	private HttpResponse responseObj;
 
-	public CreateResponse(HttpRequest requestObj, HttpMethod methodObj) {
+	public CreateResponse(HttpRequest requestObj) {
 		this.requestObj = requestObj;
-		this.methodObj = methodObj;
+		// this.methodObj = methodObj;
 	}
 
-	public void createResponseBody() {
+	public void setRootDirectory(String rootDirectory) {
+		this.rootDirectory = rootDirectory;
+	}
+
+	public HttpResponse createResponseBody() {
 		// Check for HTTP Version
 		String httpVersion = requestObj.getHttpVersion();
-		String httpMethod = methodObj.getHttpMethod();
+		String httpMethod = requestObj.getHttpMethod();
 		String resourceURI = requestObj.getResourceURI();
-		ClientProcessingRunnable clientObj = new ClientProcessingRunnable();
-		this.rootDirectory = clientObj.getRootDirectory();
-		responseObj.setHttpVersion(httpVersion);
+		//ClientProcessingRunnable clientObj = new ClientProcessingRunnable();
+		//this.rootDirectory = clientObj.getRootDirectory();
+		// responseObj.setHttpVersion(httpVersion);
+		responseObj = new HttpResponse();
+		if (httpVersion.equals("HTTP/1.1")) {
+			responseObj.setHttpVersion("HTTP/1.1");
+		}
+		if (httpVersion.equals("HTTP/1.0")) {
+			responseObj.setHttpVersion("HTTP/1.0");
+		}
 
 		if (!httpVersion.equals("HTTP/1.1") && !httpVersion.equals("HTTP/1.0")) {
 			String statusCode = "400 Bad Request";
@@ -41,7 +53,7 @@ public class CreateResponse {
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
-			return;
+			return responseObj;
 		}
 
 		// Check for bad method name
@@ -53,7 +65,7 @@ public class CreateResponse {
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
-			return;
+			return responseObj;
 		}
 
 		// Methods not implemented - send 501
@@ -65,7 +77,7 @@ public class CreateResponse {
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
-			return;
+			return responseObj;
 		}
 
 		// Check for illegal access
@@ -77,7 +89,7 @@ public class CreateResponse {
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
-			return;
+			return responseObj;
 		}
 
 		if (!resourceURI.startsWith("/")) {
@@ -88,13 +100,12 @@ public class CreateResponse {
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
-			return;
+			return responseObj;
 		}
 
 		if (httpMethod.equals("GET")) {
 			final String FILE_TO_SEND = rootDirectory + resourceURI;
 			File myFile = new File(FILE_TO_SEND);
-			try {
 				if (!myFile.exists()) {
 					String statusCode = "404 Not Found";
 					String htmlBody = "<html><body>" + statusCode + "</body></html>";
@@ -103,17 +114,24 @@ public class CreateResponse {
 					responseObj.setContentType("text/html");
 					getGMTDateTime();
 					responseObj.setContentLength(String.valueOf(htmlBody.length()));
+					return responseObj;
 				} else if (myFile.exists() && myFile.isFile()) {
 					byte[] mybytearray = new byte[(int) myFile.length()];
 					String statusCode = "200 OK";
-					BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
-					bis.read(mybytearray, 0, mybytearray.length);
-					bis.close();
+					BufferedInputStream bis;
+					try {
+						bis = new BufferedInputStream(new FileInputStream(myFile));
+						bis.read(mybytearray, 0, mybytearray.length);
+						bis.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					responseObj.setStatusCode(statusCode);
 					setFileType();
 					getGMTDateTime();
 					responseObj.setContentLength(String.valueOf(mybytearray.length));
 					responseObj.setResponseBody(mybytearray.toString());
+					return responseObj;
 				} else if (myFile.exists() && myFile.isDirectory()) {
 					File[] listOfFiles = myFile.listFiles();
 					List<String> results = new ArrayList<String>();
@@ -133,13 +151,9 @@ public class CreateResponse {
 						responseObj.setResponseBody(link);
 						responseObj.setContentType("text/html");
 						getGMTDateTime();
+						return responseObj;
 					}
 				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
 		}
 		if (httpMethod.equals("HEAD")) {
 			final String FILE_TO_SEND = rootDirectory + resourceURI;
@@ -152,6 +166,7 @@ public class CreateResponse {
 				getGMTDateTime();
 				responseObj.setContentLength(String.valueOf(htmlBody.length()));
 				responseObj.setResponseBody(htmlBody);
+				return responseObj;
 			} else if (myFile.exists()) {
 				String statusCode = "204 No Content";
 				String htmlBody = "<html><body>" + statusCode + "</body></html>";
@@ -160,8 +175,10 @@ public class CreateResponse {
 				responseObj.setContentType("text/html");
 				getGMTDateTime();
 				responseObj.setContentLength(String.valueOf(htmlBody.length()));
+				return responseObj;
 			}
 		}
+		return responseObj;
 	}
 
 	public void getGMTDateTime() {
