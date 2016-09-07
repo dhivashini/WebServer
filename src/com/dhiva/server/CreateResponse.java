@@ -41,6 +41,7 @@ public class CreateResponse {
 		if (httpVersion.equals("HTTP/1.1")) {
 			responseObj.setHttpVersion("HTTP/1.1");
 		}
+		
 		if (httpVersion.equals("HTTP/1.0")) {
 			responseObj.setHttpVersion("HTTP/1.0");
 		}
