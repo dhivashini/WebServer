@@ -2,7 +2,6 @@ package com.dhiva.server;
 
 public class HttpRequestParser {
 	private StringBuffer clientRequest;
-	//HttpMethod methodObj ;
 
 	public HttpRequestParser(StringBuffer clientRequest) {
 		this.clientRequest = clientRequest;
@@ -17,11 +16,4 @@ public class HttpRequestParser {
 		requestObj.setHttpVersion(splited[2]);
 		return requestObj;
 	}
-	/*public HttpMethod parseMethod(){
-		String request = clientRequest.toString();
-		String[] splited = request.split("\\s+");
-		methodObj.setHttpMethod("GET");
-		return methodObj;
-	}*/
-
 }

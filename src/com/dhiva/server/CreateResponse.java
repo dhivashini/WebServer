@@ -34,10 +34,8 @@ public class CreateResponse {
 		String httpVersion = requestObj.getHttpVersion();
 		String httpMethod = requestObj.getHttpMethod();
 		String resourceURI = requestObj.getResourceURI();
-		// ClientProcessingRunnable clientObj = new ClientProcessingRunnable();
-		// this.rootDirectory = clientObj.getRootDirectory();
-		// responseObj.setHttpVersion(httpVersion);
 		responseObj = new HttpResponse();
+
 		if (httpVersion.equals("HTTP/1.1")) {
 			responseObj.setHttpVersion("HTTP/1.1");
 		}
@@ -140,7 +138,7 @@ public class CreateResponse {
 				String startTag;
 				String endTag;
 				String displayName;
-				String link ="";
+				String link = "";
 				for (File file : listOfFiles) {
 					if (file.isFile()) {
 						results.add(file.getName());
@@ -150,7 +148,7 @@ public class CreateResponse {
 					startTag = "<!DOCTYPE html> <html> <body><a href=\"";
 					endTag = "</a></body> </html>";
 					displayName = "\">" + fileName;
-					link += startTag + myFile.getName() + "/" + fileName + displayName + endTag;				
+					link += startTag + myFile.getName() + "/" + fileName + displayName + endTag + "<br/>";
 				}
 				responseObj.setStatusCode(statusCode);
 				responseObj.setContentLength(String.valueOf(link.length()));
