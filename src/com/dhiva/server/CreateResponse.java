@@ -136,24 +136,28 @@ public class CreateResponse {
 			} else if (myFile.exists() && myFile.isDirectory()) {
 				File[] listOfFiles = myFile.listFiles();
 				List<String> results = new ArrayList<String>();
+				String statusCode = "200 OK";
+				String startTag;
+				String endTag;
+				String displayName;
+				String link ="";
 				for (File file : listOfFiles) {
 					if (file.isFile()) {
 						results.add(file.getName());
 					}
 				}
 				for (String fileName : results) {
-					String statusCode = "200 OK";
-					String startTag = "<!DOCTYPE html> <html> <body><a href=\"";
-					String endTag = "</a></body> </html>";
-					String displayName = "\">" + fileName;
-					String link = startTag + myFile.getName() + "/" + fileName + displayName + endTag;
-					responseObj.setStatusCode(statusCode);
-					responseObj.setContentLength(String.valueOf(link.length()));
-					responseObj.setResponseBody(link.getBytes());
-					responseObj.setContentType("text/html");
-					getGMTDateTime();
-					return responseObj;
+					startTag = "<!DOCTYPE html> <html> <body><a href=\"";
+					endTag = "</a></body> </html>";
+					displayName = "\">" + fileName;
+					link += startTag + myFile.getName() + "/" + fileName + displayName + endTag;				
 				}
+				responseObj.setStatusCode(statusCode);
+				responseObj.setContentLength(String.valueOf(link.length()));
+				responseObj.setResponseBody(link.getBytes());
+				responseObj.setContentType("text/html");
+				getGMTDateTime();
+				return responseObj;
 			}
 		}
 		if (httpMethod.equals("HEAD")) {
