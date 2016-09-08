@@ -2,7 +2,7 @@ package com.dhiva.server;
 
 public class HttpResponse {
 	private String responseHeader;
-	private String responseBody; 
+	private byte[] responseBody; 
 	private String statusCode;
 	private String contentLength;
 	private String contentType;
@@ -53,11 +53,11 @@ public class HttpResponse {
 		return responseHeader;
 	}
 
-	public void setResponseBody(String responseBody) {
-		this.responseBody = responseBody;
+	public void setResponseBody(byte[] mybytearray) {
+		this.responseBody = mybytearray;
 	}
 
-	public String getResponseBody() {
+	public byte[] getResponseBody() {
 		return responseBody;
 	}
 }

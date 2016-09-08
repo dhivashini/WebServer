@@ -72,14 +72,13 @@ public class ClientProcessingRunnable implements Runnable {
 	}
 
 	private void sendClientFile(Socket currentClient, HttpResponse responseObj) {
-		String responseBody = responseObj.getResponseBody();
-		String responseHeader = responseObj.getResponseHeader();
-		String response = responseHeader + responseBody;
+		byte[] responseBody = responseObj.getResponseBody();
+		byte[] responseHeader = responseObj.getResponseHeader().getBytes();
 		OutputStream stream;
 		try {
 			stream = currentClient.getOutputStream();
-			byte[] clientResponse = response.getBytes();
-			stream.write(clientResponse);
+			stream.write(responseHeader);
+			stream.write(responseBody);
 			stream.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

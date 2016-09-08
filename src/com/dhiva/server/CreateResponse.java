@@ -50,7 +50,7 @@ public class CreateResponse {
 			String statusCode = "400 Bad Request";
 			String htmlBody = "<html><body>" + statusCode + "</body></html>";
 			responseObj.setStatusCode(statusCode);
-			responseObj.setResponseBody(htmlBody);
+			responseObj.setResponseBody(htmlBody.getBytes());
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
@@ -62,7 +62,7 @@ public class CreateResponse {
 			String statusCode = "400 Bad Request";
 			String htmlBody = "<html><body>" + statusCode + "<br>Syntax error in the request line" + "</body></html>";
 			responseObj.setStatusCode(statusCode);
-			responseObj.setResponseBody(htmlBody);
+			responseObj.setResponseBody(htmlBody.getBytes());
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
@@ -74,7 +74,7 @@ public class CreateResponse {
 			String statusCode = "501 Not Implemented";
 			String htmlBody = "<html><body>" + statusCode + "</body></html>";
 			responseObj.setStatusCode(statusCode);
-			responseObj.setResponseBody(htmlBody);
+			responseObj.setResponseBody(htmlBody.getBytes());
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
@@ -86,7 +86,7 @@ public class CreateResponse {
 			String statusCode = "403 Access Forbidden";
 			String htmlBody = "<html><body>" + statusCode + "</body></html>";
 			responseObj.setStatusCode(statusCode);
-			responseObj.setResponseBody(htmlBody);
+			responseObj.setResponseBody(htmlBody.getBytes());
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
@@ -97,7 +97,7 @@ public class CreateResponse {
 			String statusCode = "400 Bad Request";
 			String htmlBody = "<html><body>" + statusCode + "<br>Syntax error in the request line" + "</body></html>";
 			responseObj.setStatusCode(statusCode);
-			responseObj.setResponseBody(htmlBody);
+			responseObj.setResponseBody(htmlBody.getBytes());
 			responseObj.setContentType("text/html");
 			getGMTDateTime();
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
@@ -111,7 +111,7 @@ public class CreateResponse {
 					String statusCode = "404 Not Found";
 					String htmlBody = "<html><body>" + statusCode + "</body></html>";
 					responseObj.setStatusCode(statusCode);
-					responseObj.setResponseBody(htmlBody);
+					responseObj.setResponseBody(htmlBody.getBytes());
 					responseObj.setContentType("text/html");
 					getGMTDateTime();
 					responseObj.setContentLength(String.valueOf(htmlBody.length()));
@@ -131,7 +131,7 @@ public class CreateResponse {
 					setFileType();
 					getGMTDateTime();
 					responseObj.setContentLength(String.valueOf(mybytearray.length));
-					responseObj.setResponseBody(mybytearray.toString());
+					responseObj.setResponseBody(mybytearray);
 					return responseObj;
 				} else if (myFile.exists() && myFile.isDirectory()) {
 					File[] listOfFiles = myFile.listFiles();
@@ -149,7 +149,7 @@ public class CreateResponse {
 						String link = startTag + myFile.getName() + "/" + fileName + displayName + endTag;
 						responseObj.setStatusCode(statusCode);
 						responseObj.setContentLength(String.valueOf(link.length()));
-						responseObj.setResponseBody(link);
+						responseObj.setResponseBody(link.getBytes());
 						responseObj.setContentType("text/html");
 						getGMTDateTime();
 						return responseObj;
@@ -166,13 +166,13 @@ public class CreateResponse {
 				responseObj.setContentType("text/html");
 				getGMTDateTime();
 				responseObj.setContentLength(String.valueOf(htmlBody.length()));
-				responseObj.setResponseBody(htmlBody);
+				responseObj.setResponseBody(htmlBody.getBytes());
 				return responseObj;
 			} else if (myFile.exists()) {
 				String statusCode = "204 No Content";
 				String htmlBody = "<html><body>" + statusCode + "</body></html>";
 				responseObj.setStatusCode(statusCode);
-				responseObj.setResponseBody(htmlBody);
+				responseObj.setResponseBody(htmlBody.getBytes());
 				responseObj.setContentType("text/html");
 				getGMTDateTime();
 				responseObj.setContentLength(String.valueOf(htmlBody.length()));
@@ -192,7 +192,7 @@ public class CreateResponse {
 
 	private void setFileType() {
 		String resourceURI = requestObj.getResourceURI();
-		if (resourceURI.endsWith(".jpg") || resourceURI.endsWith(".jpeg") || resourceURI.endsWith("jpe")) {
+		if (resourceURI.endsWith(".jpeg") || resourceURI.endsWith(".jpg") ) {
 			responseObj.setContentType("image/jpeg");
 		} else if (resourceURI.endsWith(".bmp")) {
 			responseObj.setContentType("image/x-ms-bmp");
@@ -210,9 +210,9 @@ public class CreateResponse {
 			responseObj.setContentType("text/css");
 		} else if (resourceURI.endsWith(".js")) {
 			responseObj.setContentType("text/javascript");
-		} else if (resourceURI.endsWith("doc") || resourceURI.endsWith("docx")) {
+		} else if (resourceURI.endsWith(".doc") || resourceURI.endsWith(".docx")) {
 			responseObj.setContentType("application/msword");
-		} else if (resourceURI.endsWith("pdf")) {
+		} else if (resourceURI.endsWith(".pdf")) {
 			responseObj.setContentType("application/pdf");
 		} else {
 			responseObj.setContentType("application/octet-stream");
