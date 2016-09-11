@@ -26,8 +26,8 @@ public class HttpRequest {
 		}
 	}
 
-	public String getHttpMethod() {
-		return httpMethod.toString();
+	public HttpMethod getHttpMethod() {
+		return httpMethod;
 	}
 
 	public void setHttpVersion(String requestVersion) {
