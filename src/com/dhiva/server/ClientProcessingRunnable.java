@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import com.dhiva.server.HttpRequest.HttpMethod;
-
 public class ClientProcessingRunnable implements Runnable {
 	// instance variable
 	private String name;
 	private String rootDirectory;
+	private String webXmlLocation;
 	private boolean runnableState = false;
 	static boolean append = true;
 
@@ -62,10 +61,9 @@ public class ClientProcessingRunnable implements Runnable {
 		StringBuffer clientRequest = socketObj.readrequest();
 		HttpRequestParser parseObj = new HttpRequestParser(clientRequest);
 		HttpRequest requestObj = parseObj.parse();
-		//HttpMethod methodObj = parseObj.parseMethod();
-		//CreateResponse createResponseObj = new CreateResponse(requestObj, methodObj);
 		CreateResponse createResponseObj = new CreateResponse(requestObj);
 		createResponseObj.setRootDirectory(rootDirectory);
+		createResponseObj.setWebXmlLocation(webXmlLocation);
 		HttpResponse responseObj = createResponseObj.createResponseBody();
 		sendClientFile(currentClient, responseObj);
 		currentClient.close();
@@ -85,5 +83,12 @@ public class ClientProcessingRunnable implements Runnable {
 		}
 	}
 
+	public void setPath(String webXmlLocation) {
+		this.webXmlLocation = webXmlLocation;
+	}
+ 
+	public String getPath(){
+		return webXmlLocation;
+	}
 
 }

@@ -3,26 +3,21 @@ package com.dhiva.server;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-
-import com.dhiva.server.HttpRequest.HttpMethod;
+import TestHarness.TestHarness;
 
 public class CreateResponse {
 	private HttpRequest requestObj;
-	// private HttpMethod methodObj;
 	private String rootDirectory;
+	private String webXmlLocation;
 	private HttpResponse responseObj;
-
+	
 	public CreateResponse(HttpRequest requestObj) {
 		this.requestObj = requestObj;
-		// this.methodObj = methodObj;
 	}
 
 	public void setRootDirectory(String rootDirectory) {
@@ -101,6 +96,7 @@ public class CreateResponse {
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
 			return responseObj;
 		}
+		
 
 		if (httpMethod.equals("GET")) {
 			final String FILE_TO_SEND = rootDirectory + resourceURI;
@@ -183,6 +179,8 @@ public class CreateResponse {
 		}
 		return responseObj;
 	}
+	
+
 
 	public void getGMTDateTime() {
 		final Date currentTime = new Date();
@@ -219,5 +217,9 @@ public class CreateResponse {
 		} else {
 			responseObj.setContentType("application/octet-stream");
 		}
+	}
+
+	public void setWebXmlLocation(String webXmlLocation) {
+		this.webXmlLocation = webXmlLocation;
 	}
 }

@@ -1,9 +1,15 @@
 
 package com.dhiva.server;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+
+import TestHarness.FakeContext;
+import TestHarness.TestHarness;
 import java.util.Queue;
 import java.util.Scanner;
+
+import javax.servlet.http.HttpServlet;
 
 public class ServerApp {
 	// create a thread queue of a size
@@ -11,14 +17,20 @@ public class ServerApp {
 	static ClientConnectionsRunnable connectionObj;
 	static int portNum;
 	static String rootDirectory;
+	private static String webXmlLocation;
+	private FakeContext servletContext;
+	private HashMap<String,String> servletMapping = new HashMap<String, String>(); 
+	private HashMap<String,HttpServlet> servlet;
+
 	
 	public static void main(String[] args) {
 		int numberOfThreads = 5;
 		
-		if (args.length == 3) {
+		if (args.length == 4) {
 			numberOfThreads = Integer.parseInt(args[0]);
 			portNum = Integer.parseInt(args[1]);
 			rootDirectory = args[2];
+			webXmlLocation = args[3];
 		} else {
 			System.out.println("Please enter the following arguments. <# of processing threads> <port> <rootdir>");
 		}
@@ -30,6 +42,9 @@ public class ServerApp {
 		spanProcessingThreads(numberOfThreads);
 		// spans a new thread to accept client connections
 		spanThreadToAcceptConnections();
+		//initialize servelets
+		ServerApp httpServer = new ServerApp();
+		httpServer.initServlets();
 
 		while (true) {
 			Scanner reader = new Scanner(System.in);
@@ -48,12 +63,21 @@ public class ServerApp {
 
 	}
 
-	public static void spanProcessingThreads(int numberOfThreads) {
+	private void initServlets() {
+		TestHarness test = new TestHarness();
+		try {
+			test.invokeTestHarness(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	public static void spanProcessingThreads(int numberOfThreads) {
 		while (numberOfThreads >= 0) {
 			ClientProcessingRunnable clientObj = new ClientProcessingRunnable();
 			clientObj.setName("processor" + numberOfThreads);
 			clientObj.setRootDirectory(rootDirectory);
+			clientObj.setPath(webXmlLocation);
 			Thread thread = new Thread(clientObj);
 			// assign a runnable class to a thread
 			// this runnable class performs the processing needed by the client
@@ -79,5 +103,25 @@ public class ServerApp {
 			t.setRunnableState(true);
 		}
 		connectionObj.setRunnableState(true);
+	}
+
+	public String getWebxmlPath() {
+		return this.webXmlLocation;
+	}
+
+	public void setServletMapping(HashMap<String, String> m_servletMapping) {
+		this.servletMapping = servletMapping;
+	}
+
+	public void setServletContext(FakeContext createContext) {
+		this.servletContext = servletContext;		
+	}
+
+	public FakeContext getServletContext() {
+		return servletContext;
+	}
+
+	public void setServlets(HashMap<String, HttpServlet> servlet) {
+		this.servlet = servlet;
 	}
 }
