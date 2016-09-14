@@ -63,7 +63,7 @@ public class ClientProcessingRunnable implements Runnable {
 		HttpRequest requestObj = parseObj.parse();
 		CreateResponse createResponseObj = new CreateResponse(requestObj);
 		createResponseObj.setRootDirectory(rootDirectory);
-		createResponseObj.setWebXmlLocation(webXmlLocation);
+		//createResponseObj.setWebXmlLocation(webXmlLocation);
 		HttpResponse responseObj = createResponseObj.createResponseBody();
 		sendClientFile(currentClient, responseObj);
 		currentClient.close();

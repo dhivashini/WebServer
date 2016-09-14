@@ -8,14 +8,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import TestHarness.TestHarness;
 
 public class CreateResponse {
 	private HttpRequest requestObj;
 	private String rootDirectory;
-	private String webXmlLocation;
+	// private String webXmlLocation;
 	private HttpResponse responseObj;
-	
+
 	public CreateResponse(HttpRequest requestObj) {
 		this.requestObj = requestObj;
 	}
@@ -96,7 +95,6 @@ public class CreateResponse {
 			responseObj.setContentLength(String.valueOf(htmlBody.length()));
 			return responseObj;
 		}
-		
 
 		if (httpMethod.equals("GET")) {
 			final String FILE_TO_SEND = rootDirectory + resourceURI;
@@ -179,8 +177,6 @@ public class CreateResponse {
 		}
 		return responseObj;
 	}
-	
-
 
 	public void getGMTDateTime() {
 		final Date currentTime = new Date();
@@ -219,7 +215,7 @@ public class CreateResponse {
 		}
 	}
 
-	public void setWebXmlLocation(String webXmlLocation) {
-		this.webXmlLocation = webXmlLocation;
-	}
+//	public void setWebXmlLocation(String webXmlLocation) {
+//		this.webXmlLocation = webXmlLocation;
+//	}
 }
